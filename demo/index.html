@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tournament Bracket Demo</title>
+
+    <link rel="stylesheet" href="./tournament-bracket.min.css">
+    <style>
+        :root {
+            --bg: #0f172a;
+            --panel: #111827;
+            --panel-2: #020617;
+            --text: #e5e7eb;
+            --muted: #94a3b8;
+            --border: #334155;
+            --primary: #38bdf8;
+            --primary-dark: #0284c7;
+            --danger: #fb7185;
+            --success: #4ade80;
+            --warning: #facc15;
+            --input: #020617;
+            --radius: 14px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            background:
+                    radial-gradient(circle at top left, rgba(56, 189, 248, 0.16), transparent 28rem),
+                    radial-gradient(circle at bottom right, rgba(74, 222, 128, 0.12), transparent 24rem),
+                    var(--bg);
+            color: var(--text);
+        }
+
+        .app {
+            display: grid;
+            grid-template-columns: 430px minmax(0, 1fr);
+            gap: 18px;
+            padding: 18px;
+            min-height: 100vh;
+        }
+
+        .sidebar,
+        .preview {
+            border: 1px solid var(--border);
+            background: rgba(15, 23, 42, 0.88);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: 0 20px 70px rgba(0, 0, 0, 0.28);
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            min-height: calc(100vh - 36px);
+        }
+
+        .header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            background: rgba(2, 6, 23, 0.55);
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 18px;
+            line-height: 1.35;
+        }
+
+        .header p {
+            margin: 8px 0 0;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .section {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-title {
+            margin: 0 0 10px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #cbd5e1;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        textarea,
+        input {
+            width: 100%;
+            border: 1px solid var(--border);
+            background: var(--input);
+            color: var(--text);
+            border-radius: 10px;
+            outline: none;
+            font-family: Consolas, Monaco, monospace;
+            font-size: 12px;
+        }
+
+        textarea {
+            min-height: 250px;
+            resize: vertical;
+            padding: 12px;
+            line-height: 1.5;
+        }
+
+        input {
+            height: 38px;
+            padding: 0 10px;
+        }
+
+        textarea:focus,
+        input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.16);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+        }
+
+        .buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        button {
+            border: 0;
+            border-radius: 999px;
+            padding: 9px 13px;
+            color: #00111a;
+            background: var(--primary);
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 12px;
+            transition: 0.15s ease;
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+            background: #7dd3fc;
+        }
+
+        button.secondary {
+            color: var(--text);
+            background: #334155;
+        }
+
+        button.secondary:hover {
+            background: #475569;
+        }
+
+        button.danger {
+            color: #fff;
+            background: #e11d48;
+        }
+
+        button.danger:hover {
+            background: #fb7185;
+        }
+
+        button.success {
+            color: #052e16;
+            background: var(--success);
+        }
+
+        button.success:hover {
+            background: #86efac;
+        }
+
+        .preview {
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .preview-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border);
+            background: rgba(2, 6, 23, 0.55);
+        }
+
+        .preview-title {
+            font-weight: 800;
+            font-size: 14px;
+        }
+
+        .preview-subtitle {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        #tournament-bracket {
+            position: relative;
+            flex: 1;
+            min-height: 620px;
+            overflow: auto;
+            padding: 42px;
+            background:
+                    linear-gradient(rgba(148, 163, 184, 0.045) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(148, 163, 184, 0.045) 1px, transparent 1px);
+            background-size: 28px 28px;
+        }
+
+        .log-panel {
+            max-height: 220px;
+            overflow: auto;
+            padding: 12px;
+            background: var(--panel-2);
+            font-family: Consolas, Monaco, monospace;
+            font-size: 12px;
+            line-height: 1.55;
+            color: #cbd5e1;
+        }
+
+        .log-item {
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(51, 65, 85, 0.55);
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .log-time {
+            color: var(--muted);
+        }
+
+        .log-info {
+            color: var(--primary);
+        }
+
+        .log-success {
+            color: var(--success);
+        }
+
+        .log-error {
+            color: var(--danger);
+        }
+
+        .log-warning {
+            color: var(--warning);
+        }
+
+        .status-line {
+            padding: 10px 16px;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 12px;
+            background: rgba(2, 6, 23, 0.55);
+        }
+
+        .hint {
+            margin-top: 8px;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .json-actions {
+            margin-top: 10px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 1100px) {
+            .app {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                min-height: auto;
+            }
+
+            #tournament-bracket {
+                min-height: 560px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<main class="app">
+    <aside class="sidebar">
+        <div class="header">
+            <h1>Tournament Bracket Playground</h1>
+            <p>
+                Edit JSON, initialize the bracket, test returned APIs, inspect state,
+                and watch callbacks firing like tiny JavaScript fireworks.
+            </p>
+        </div>
+
+        <section class="section">
+            <h2 class="section-title">1. Bracket Config JSON</h2>
+
+            <label for="configInput">Editable tournament config</label>
+            <textarea id="configInput" spellcheck="false"></textarea>
+
+            <div class="json-actions">
+                <button type="button" id="formatJsonBtn" class="secondary">Format JSON</button>
+                <button type="button" id="loadSampleBtn" class="secondary">Load Sample</button>
+            </div>
+
+            <div class="hint">
+                Important: completed matches need <code>isFinished: true</code>;
+                score alone does not advance the winner.
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">2. Lifecycle APIs</h2>
+
+            <div class="buttons">
+                <button type="button" id="initBtn" class="success">init()</button>
+                <button type="button" id="destroyBtn" class="danger">destroy()</button>
+                <button type="button" id="getStateBtn">getState()</button>
+                <button type="button" id="clearLogBtn" class="secondary">Clear Log</button>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">3. Match Update APIs</h2>
+
+            <div class="grid">
+                <div>
+                    <label for="matchIdInput">matchId</label>
+                    <input id="matchIdInput" value="m1" />
+                </div>
+
+                <div>
+                    <label for="playerNameInput">Player 1 name</label>
+                    <input id="playerNameInput" value="Ali Updated" />
+                </div>
+            </div>
+
+            <div style="height: 10px;"></div>
+
+            <div class="grid-3">
+                <div>
+                    <label for="score1Input">Score 1</label>
+                    <input id="score1Input" value="2" />
+                </div>
+
+                <div>
+                    <label for="score2Input">Score 2</label>
+                    <input id="score2Input" value="1" />
+                </div>
+
+                <div>
+                    <label for="avatarInput">Avatar URL</label>
+                    <input id="avatarInput" value="" placeholder="optional" />
+                </div>
+            </div>
+
+            <div style="height: 12px;"></div>
+
+            <div class="buttons">
+                <button type="button" id="updateMatchBtn">updateMatch()</button>
+                <button type="button" id="setScoreBtn">setMatchScore()</button>
+                <button type="button" id="finishMatchBtn" class="success">finishMatch()</button>
+            </div>
+
+            <div class="hint">
+                <code>setMatchScore()</code> فقط score را تغییر می‌دهد.
+                <code>finishMatch()</code> match را تمام می‌کند و winner را جلو می‌برد.
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">4. Callback APIs</h2>
+
+            <div class="buttons">
+                <button type="button" id="registerCallbacksBtn">Register Callbacks</button>
+                <button type="button" id="replaceCallbacksBtn" class="secondary">Replace Callbacks</button>
+            </div>
+
+            <div class="hint">
+                تست می‌کند:
+                <code>onMatchClick(fn)</code>,
+                <code>onMatchUpdate(fn)</code>,
+                <code>onMatchFinish(fn)</code>
+            </div>
+        </section>
+
+        <section class="section" style="border-bottom: 0;">
+            <h2 class="section-title">Event Log</h2>
+            <div id="logPanel" class="log-panel"></div>
+        </section>
+    </aside>
+
+    <section class="preview">
+        <div class="preview-toolbar">
+            <div>
+                <div class="preview-title">Bracket Preview</div>
+                <div class="preview-subtitle">Rendered inside <code>#tournament-bracket</code></div>
+            </div>
+
+            <div class="buttons">
+                <button type="button" id="quickFinishM1Btn" class="success">Quick finish m1</button>
+                <button type="button" id="quickFinishM2Btn" class="success">Quick finish m2</button>
+            </div>
+        </div>
+
+        <div id="tournament-bracket"></div>
+
+        <div id="statusLine" class="status-line">
+            Status: waiting for init()
+        </div>
+    </section>
+</main>
+
+<!-- Change this path to your actual library file. -->
+<script src="./tournament-bracket.min.js"></script>
+
+<script>
+    const sampleConfig = {
+        targetId: "tournament-bracket",
+        distance: 80,
+        width: 196,
+        matchHeight: 72,
+        roundGap: 80,
+        connectorColor: "#64748b",
+        rounds: [
+            {
+                roundId: "r1",
+                name: "Quarter Finals",
+                matches: [
+                    {
+                        matchId: "m1",
+                        isFinished: true,
+                        players: [
+                            {
+                                name: "Player 1",
+                                score: 2,
+                                avatarUrl: ""
+                            },
+                            {
+                                name: "Player 2",
+                                score: 1,
+                                avatarUrl: ""
+                            }
+                        ]
+                    },
+                    {
+                        matchId: "m2",
+                        players: [
+                            {
+                                name: "Player 3",
+                                score: "-"
+                            },
+                            {
+                                name: "Player 4",
+                                score: "-"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                roundId: "r2",
+                name: "Semi Finals",
+                matches: [
+                    {
+                        matchId: "m3",
+                        players: [{}, {}]
+                    }
+                ]
+            }
+        ]
+    };
+
+    let tb = null;
+
+    const elements = {
+        configInput: document.getElementById("configInput"),
+        initBtn: document.getElementById("initBtn"),
+        destroyBtn: document.getElementById("destroyBtn"),
+        getStateBtn: document.getElementById("getStateBtn"),
+        clearLogBtn: document.getElementById("clearLogBtn"),
+        formatJsonBtn: document.getElementById("formatJsonBtn"),
+        loadSampleBtn: document.getElementById("loadSampleBtn"),
+        updateMatchBtn: document.getElementById("updateMatchBtn"),
+        setScoreBtn: document.getElementById("setScoreBtn"),
+        finishMatchBtn: document.getElementById("finishMatchBtn"),
+        registerCallbacksBtn: document.getElementById("registerCallbacksBtn"),
+        replaceCallbacksBtn: document.getElementById("replaceCallbacksBtn"),
+        quickFinishM1Btn: document.getElementById("quickFinishM1Btn"),
+        quickFinishM2Btn: document.getElementById("quickFinishM2Btn"),
+        matchIdInput: document.getElementById("matchIdInput"),
+        playerNameInput: document.getElementById("playerNameInput"),
+        score1Input: document.getElementById("score1Input"),
+        score2Input: document.getElementById("score2Input"),
+        avatarInput: document.getElementById("avatarInput"),
+        logPanel: document.getElementById("logPanel"),
+        statusLine: document.getElementById("statusLine")
+    };
+
+    function setStatus(message) {
+        elements.statusLine.textContent = `Status: ${message}`;
+    }
+
+    function now() {
+        return new Date().toLocaleTimeString();
+    }
+
+    function log(type, message, data) {
+        const item = document.createElement("div");
+        item.className = "log-item";
+
+        const payload = data === undefined
+            ? ""
+            : "\n" + JSON.stringify(data, null, 2);
+
+        item.innerHTML = [
+            `<span class="log-time">[${now()}]</span>`,
+            `<span class="log-${type}">${type.toUpperCase()}</span>`,
+            escapeHtml(message + payload)
+        ].join(" ");
+
+        elements.logPanel.prepend(item);
+    }
+
+    function escapeHtml(value) {
+        return String(value)
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
+    }
+
+    function parseJsonConfig() {
+        try {
+            return JSON.parse(elements.configInput.value);
+        } catch (error) {
+            throw new Error(`Invalid JSON: ${error.message}`);
+        }
+    }
+
+    function requireBracket() {
+        if (!tb) {
+            throw new Error("Bracket is not initialized. Click init() first.");
+        }
+
+        return tb;
+    }
+
+    function toScore(value) {
+        const trimmed = String(value).trim();
+
+        if (trimmed === "-") {
+            return "-";
+        }
+
+        const number = Number(trimmed);
+
+        return Number.isNaN(number) ? trimmed : number;
+    }
+
+    function getFormValues() {
+        return {
+            matchId: elements.matchIdInput.value.trim(),
+            playerName: elements.playerNameInput.value.trim(),
+            score1: toScore(elements.score1Input.value),
+            score2: toScore(elements.score2Input.value),
+            avatarUrl: elements.avatarInput.value.trim()
+        };
+    }
+
+    function registerDefaultCallbacks(instance, label) {
+        instance.onMatchClick(function (match) {
+            log("info", `${label}: onMatchClick`, {
+                matchId: match.matchId,
+                players: match.players
+            });
+        });
+
+        instance.onMatchUpdate(function (match) {
+            log("warning", `${label}: onMatchUpdate`, {
+                matchId: match.matchId,
+                players: match.players,
+                isFinished: match.isFinished
+            });
+        });
+
+        instance.onMatchFinish(function (match) {
+            log("success", `${label}: onMatchFinish`, {
+                matchId: match.matchId,
+                players: match.players
+            });
+        });
+    }
+
+    function safeRun(actionName, fn) {
+        try {
+            const result = fn();
+
+            if (result !== undefined) {
+                log("success", `${actionName} completed`, result);
+            } else {
+                log("success", `${actionName} completed`);
+            }
+
+            return result;
+        } catch (error) {
+            log("error", `${actionName} failed: ${error.message}`);
+            setStatus(`${actionName} failed`);
+            return null;
+        }
+    }
+
+    function initDemo() {
+        safeRun("init()", function () {
+            const config = parseJsonConfig();
+
+            if (tb) {
+                tb.destroy();
+                tb = null;
+            }
+
+            tb = tournamentBracket({
+                ...config,
+                onMatchClick: function (match) {
+                    log("info", "config.onMatchClick", {
+                        matchId: match.matchId,
+                        players: match.players
+                    });
+                },
+                onMatchUpdate: function (match) {
+                    log("warning", "config.onMatchUpdate", {
+                        matchId: match.matchId,
+                        players: match.players,
+                        isFinished: match.isFinished
+                    });
+                },
+                onMatchFinish: function (match) {
+                    log("success", "config.onMatchFinish", {
+                        matchId: match.matchId,
+                        players: match.players
+                    });
+                }
+            });
+
+            tb.init();
+            setStatus("initialized");
+
+            return {
+                api: Object.keys(tb)
+            };
+        });
+    }
+
+    function destroyDemo() {
+        safeRun("destroy()", function () {
+            const instance = requireBracket();
+            instance.destroy();
+            tb = null;
+            setStatus("destroyed");
+        });
+    }
+
+    function getStateDemo() {
+        safeRun("getState()", function () {
+            const instance = requireBracket();
+            return instance.getState();
+        });
+    }
+
+    function updateMatchDemo() {
+        safeRun("updateMatch()", function () {
+            const instance = requireBracket();
+            const values = getFormValues();
+
+            const payload = {
+                players: [
+                    {
+                        name: values.playerName,
+                        score: values.score1,
+                        avatarUrl: values.avatarUrl
+                    },
+                    {
+                        score: values.score2
+                    }
+                ]
+            };
+
+            return instance.updateMatch(values.matchId, payload);
+        });
+    }
+
+    function setMatchScoreDemo() {
+        safeRun("setMatchScore()", function () {
+            const instance = requireBracket();
+            const values = getFormValues();
+
+            return instance.setMatchScore(
+                values.matchId,
+                values.score1,
+                values.score2
+            );
+        });
+    }
+
+    function finishMatchDemo() {
+        safeRun("finishMatch()", function () {
+            const instance = requireBracket();
+            const values = getFormValues();
+
+            return instance.finishMatch(
+                values.matchId,
+                values.score1,
+                values.score2
+            );
+        });
+    }
+
+    function registerCallbacksDemo() {
+        safeRun("Register callbacks", function () {
+            const instance = requireBracket();
+            registerDefaultCallbacks(instance, "registered callback");
+
+            return {
+                registered: [
+                    "onMatchClick",
+                    "onMatchUpdate",
+                    "onMatchFinish"
+                ]
+            };
+        });
+    }
+
+    function replaceCallbacksDemo() {
+        safeRun("Replace callbacks", function () {
+            const instance = requireBracket();
+
+            instance.onMatchClick(function (match) {
+                log("info", "REPLACED onMatchClick: click-click-boom", {
+                    matchId: match.matchId
+                });
+            });
+
+            instance.onMatchUpdate(function (match) {
+                log("warning", "REPLACED onMatchUpdate: mutation detected", {
+                    matchId: match.matchId
+                });
+            });
+
+            instance.onMatchFinish(function (match) {
+                log("success", "REPLACED onMatchFinish: winner propagated", {
+                    matchId: match.matchId
+                });
+            });
+
+            return {
+                replaced: true
+            };
+        });
+    }
+
+    function quickFinish(matchId, score1, score2) {
+        safeRun(`quick finish ${matchId}`, function () {
+            const instance = requireBracket();
+
+            elements.matchIdInput.value = matchId;
+            elements.score1Input.value = String(score1);
+            elements.score2Input.value = String(score2);
+
+            return instance.finishMatch(matchId, score1, score2);
+        });
+    }
+
+    function formatJson() {
+        safeRun("Format JSON", function () {
+            const config = parseJsonConfig();
+            elements.configInput.value = JSON.stringify(config, null, 4);
+            return {
+                formatted: true
+            };
+        });
+    }
+
+    function loadSample() {
+        elements.configInput.value = JSON.stringify(sampleConfig, null, 4);
+        log("info", "Sample JSON loaded");
+        setStatus("sample loaded");
+    }
+
+    elements.initBtn.addEventListener("click", initDemo);
+    elements.destroyBtn.addEventListener("click", destroyDemo);
+    elements.getStateBtn.addEventListener("click", getStateDemo);
+    elements.updateMatchBtn.addEventListener("click", updateMatchDemo);
+    elements.setScoreBtn.addEventListener("click", setMatchScoreDemo);
+    elements.finishMatchBtn.addEventListener("click", finishMatchDemo);
+    elements.registerCallbacksBtn.addEventListener("click", registerCallbacksDemo);
+    elements.replaceCallbacksBtn.addEventListener("click", replaceCallbacksDemo);
+    elements.quickFinishM1Btn.addEventListener("click", function () {
+        quickFinish("m1", 2, 1);
+    });
+    elements.quickFinishM2Btn.addEventListener("click", function () {
+        quickFinish("m2", 3, 2);
+    });
+    elements.formatJsonBtn.addEventListener("click", formatJson);
+    elements.loadSampleBtn.addEventListener("click", loadSample);
+    elements.clearLogBtn.addEventListener("click", function () {
+        elements.logPanel.innerHTML = "";
+        setStatus("log cleared");
+    });
+
+    loadSample();
+</script>
+</body>
+</html>
