@@ -5,6 +5,15 @@ export function tournamentBracket(userConfig = {}) {
         score: "-",
     };
 
+    const DEFAULT_AVATAR =
+        "data:image/svg+xml;utf8," +
+        encodeURIComponent(`
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64">
+              <rect width="100%" height="100%" fill="#e5e7eb"/>
+              <text x="50%" y="54%" text-anchor="middle" font-size="28" fill="#6b7280">?</text>
+            </svg>
+          `);
+
     const DEFAULT_CONFIG = {
         targetId: "tournament-bracket",
         rounds: null,
@@ -12,7 +21,7 @@ export function tournamentBracket(userConfig = {}) {
         width: 196,
         matchHeight: 94,
         roundGap: 96,
-        avatarFallbackUrl: "/images/avatar.png",
+        avatarFallbackUrl: DEFAULT_AVATAR,
         connectorColor: "white",
         onMatchClick: null,
         onMatchUpdate: null,

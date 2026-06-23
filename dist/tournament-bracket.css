@@ -1,0 +1,117 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap");
+body {
+  background-color: #1E1E1E;
+}
+
+#tournament-bracket {
+  overflow: auto;
+}
+
+.tournament-bracket-container {
+  position: relative;
+}
+
+.tournament-bracket-connectors {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.tournament-bracket-column {
+  position: absolute;
+  z-index: 1;
+}
+
+.match-container {
+  position: absolute;
+  z-index: 1;
+}
+
+.tournament-bracket-connector {
+  transition: stroke 0.2s ease;
+}
+
+.tournament-bracket-container {
+  display: flex;
+  gap: 24px;
+}
+.tournament-bracket-container .tournament-bracket-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  justify-content: space-around;
+}
+.tournament-bracket-container .tournament-bracket-column .match-container {
+  position: relative;
+  border-radius: 10px;
+}
+.tournament-bracket-container .tournament-bracket-column .match-container .player-vs {
+  position: absolute;
+  top: calc(50% + 10px);
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+  margin: 0 auto;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid #FF6E27;
+  background-color: #464646;
+  color: #F8F9FA;
+  font-family: Roboto;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  z-index: 1;
+}
+.tournament-bracket-container .tournament-bracket-column .match-container .tournament-bracket-player {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 47px;
+  padding: 0 16px;
+  background-color: #464646;
+  color: #949494;
+  font-family: Roboto;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  box-sizing: border-box;
+}
+.tournament-bracket-container .tournament-bracket-column .match-container .tournament-bracket-player .avatar-and-name-container {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.tournament-bracket-container .tournament-bracket-column .match-container .tournament-bracket-player.player-winner {
+  background-color: #111111;
+}
+.tournament-bracket-container .tournament-bracket-column .match-container .tournament-bracket-player .avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 100%;
+  overflow: hidden;
+}
+.tournament-bracket-container .tournament-bracket-column .match-container .tournament-bracket-player .name {
+  max-width: 92px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tournament-bracket-container .tournament-bracket-column .match-container .tournament-bracket-player .score {
+  font-family: Roboto;
+  padding: 0 12px;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  color: #F8F9FA;
+}
+
+/*# sourceMappingURL=tournament-bracket.css.map */

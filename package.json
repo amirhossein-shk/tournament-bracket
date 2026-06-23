@@ -1,0 +1,46 @@
+{
+  "name": "tournament-bracket-js",
+  "version": "1.0.0",
+  "description": "Lightweight vanilla JS tournament bracket library",
+  "main": "tournamentBracket.js",
+  "module": "dist/tournament-bracket.esm.js",
+  "style": "dist/tournament-bracket.css",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "npm run clean && npm run browser && npm run browser:min && npm run esm && npm run esm:min && npm run css && npm run css:min && npm run clean:temp",
+    "clean": "shx rm -rf dist dist-temp",
+    "clean:temp": "shx rm -rf dist-temp",
+    "browser": "vite build --mode browser",
+    "browser:min": "vite build --mode browser-min --outDir dist-temp && shx cp dist-temp/tournament-bracket.js dist/tournament-bracket.min.js",
+    "esm": "vite build --mode esm",
+    "esm:min": "vite build --mode esm-min --outDir dist-temp && shx cp dist-temp/tournament-bracket.esm.js dist/tournament-bracket.esm.min.js",
+    "css": "sass src/tournament-bracket.scss dist/tournament-bracket.css --style expanded",
+    "css:min": "sass src/tournament-bracket.scss dist/tournament-bracket.min.css --style compressed"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amirhossein-shk/tournament-bracket.git"
+  },
+  "keywords": [
+    "tournament",
+    "bracket",
+    "javascript",
+    "vanilla-js",
+    "single-elimination"
+  ],
+  "author": "",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/amirhossein-shk/tournament-bracket/issues"
+  },
+  "homepage": "https://github.com/amirhossein-shk/tournament-bracket#readme",
+  "devDependencies": {
+    "shx": "^0.4.0",
+    "terser": "^5.48.0",
+    "vite": "^8.0.16",
+    "sass": "^1.101.0"
+  },
+  "license": "MIT"
+}
