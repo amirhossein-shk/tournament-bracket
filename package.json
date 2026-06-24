@@ -6,7 +6,9 @@
   "module": "dist/tournament-bracket.esm.js",
   "style": "dist/tournament-bracket.css",
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "build": "npm run clean && npm run browser && npm run browser:min && npm run esm && npm run esm:min && npm run css && npm run css:min && npm run clean:temp",
