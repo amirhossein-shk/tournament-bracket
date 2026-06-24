@@ -32,7 +32,17 @@
     "vanilla-js",
     "single-elimination"
   ],
-  "author": "",
+  "author": "Amirhossein Shk <amirhossein.shk@gmail.com>",
+  "contributors": [
+    {
+      "name": "Amirhossein Shk",
+      "email": "amirhossein.shk@gmail.com",
+      "url": "https://github.com/amirhossein-shk"
+    }
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "type": "commonjs",
   "bugs": {
     "url": "https://github.com/amirhossein-shk/tournament-bracket/issues"
