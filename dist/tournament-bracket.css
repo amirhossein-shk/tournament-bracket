@@ -48,7 +48,7 @@ body {
 }
 .tournament-bracket-container .tournament-bracket-column .match-container .player-vs {
   position: absolute;
-  top: calc(50% + 10px);
+  top: 50%;
   left: 0;
   right: 0;
   transform: translateY(-50%);
@@ -73,7 +73,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 47px;
+  height: 50%;
   padding: 0 16px;
   background-color: #464646;
   color: #949494;

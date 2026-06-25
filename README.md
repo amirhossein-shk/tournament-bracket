@@ -52,8 +52,8 @@ project/
 
   demo/
     index.html
-    demo.js
-    demo.css
+    tournament-bracket.min.js
+    tournament-bracket.min.css
 
   README.md
   package.json
@@ -695,8 +695,8 @@ Recommended demo structure:
 ```txt
 demo/
   index.html
-  demo.js
-  demo.css
+  tournament-bracket.min.js
+  tournament-bracket.min.css
 ```
 
 The demo should show both:
@@ -774,7 +774,7 @@ import tournamentBracket from "./dist/tournament-bracket.esm.js";
 If you are testing directly in the browser, use a local server and a module script:
 
 ```html
-<script type="module" src="./demo.js"></script>
+<script type="module" src="./tournament-bracket.min.js"></script>
 ```
 
 Do not rely on `file://` for ESM testing.
