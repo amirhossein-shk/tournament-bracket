@@ -521,13 +521,12 @@ Use this when you want to update match data after initialization.
 
 ---
 
-### `setMatchScore(matchId, playerIndex, score)`
+### `setMatchScore(matchId, score1, score2)`
 
-Updates the score of one player in a match.
+Updates both player scores in a match.
 
 ```js
-tb.setMatchScore("m2", 0, 3);
-tb.setMatchScore("m2", 1, 1);
+tb.setMatchScore("m2", 3, 1);
 ```
 
 Arguments:
@@ -535,17 +534,17 @@ Arguments:
 | Argument | Description |
 |---|---|
 | `matchId` | ID of the match |
-| `playerIndex` | Player index, either `0` or `1` |
-| `score` | New player score |
+| `score1` | First player score |
+| `score2` | Second player score |
 
 ---
 
-### `finishMatch(matchId)`
+### `finishMatch(matchId, score1, score2)`
 
-Marks a match as finished.
+Marks a match as finished with final scores.
 
 ```js
-tb.finishMatch("m2");
+tb.finishMatch("m2", 3, 1);
 ```
 
 When a match is finished, the library can resolve the winner and move the winner forward according to the bracket structure.
@@ -676,10 +675,9 @@ const tb = tournamentBracket(sampleConfig);
 
 tb.init();
 
-tb.setMatchScore("m2", 0, 2);
-tb.setMatchScore("m2", 1, 0);
+tb.setMatchScore("m2", 2, 0);
 
-tb.finishMatch("m2");
+tb.finishMatch("m2", 2, 0);
 
 console.log(tb.getState());
 ```

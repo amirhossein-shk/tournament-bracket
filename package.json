@@ -2,7 +2,7 @@
   "name": "@amirhossein-shk/tournament-bracket-js",
   "version": "1.0.6",
   "description": "Lightweight vanilla JS tournament bracket library",
-  "main": "tournamentBracket.js",
+  "main": "dist/tournament-bracket.js",
   "module": "dist/tournament-bracket.esm.js",
   "style": "dist/tournament-bracket.css",
   "files": [

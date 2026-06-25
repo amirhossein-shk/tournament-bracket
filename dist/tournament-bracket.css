@@ -1,14 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap");
-body {
-  background-color: #1E1E1E;
-}
-
-#tournament-bracket {
-  overflow: auto;
-}
-
 .tournament-bracket-container {
   position: relative;
+  overflow: auto;
 }
 
 .tournament-bracket-connectors {

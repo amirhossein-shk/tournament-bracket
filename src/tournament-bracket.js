@@ -665,7 +665,17 @@ export function tournamentBracket(userConfig = {}) {
     }
 
     function finishMatch(matchId, score1, score2) {
-        const updatedMatch = updateMatch(matchId, {
+        if (!bracketState) {
+            throw new Error("Tournament bracket is not initialized");
+        }
+
+        const currentMatch = findMatchById(matchId);
+
+        if (!currentMatch) {
+            throw new Error(`Match with id "${matchId}" not found`);
+        }
+
+        const candidateMatch = mergeMatchData(currentMatch, {
             isFinished: true,
             status: "completed",
             players: [
@@ -674,13 +684,15 @@ export function tournamentBracket(userConfig = {}) {
             ],
         });
 
-        const matchState = getMatchState(updatedMatch);
+        const matchState = getMatchState(candidateMatch);
 
         if (matchState.status !== "completed") {
             throw new Error(
                 `Match "${matchId}" cannot be finished because its state is "${matchState.status}".`
             );
         }
+
+        const updatedMatch = updateMatch(matchId, candidateMatch);
 
         if (typeof config.onMatchFinish === "function") {
             config.onMatchFinish(updatedMatch);

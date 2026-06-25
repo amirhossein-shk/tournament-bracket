@@ -407,13 +407,17 @@
 			return updateMatch(matchId, { players: [{ score: score1 }, { score: score2 }] });
 		}
 		function finishMatch(matchId, score1, score2) {
-			const updatedMatch = updateMatch(matchId, {
+			if (!bracketState) throw new Error("Tournament bracket is not initialized");
+			const currentMatch = findMatchById(matchId);
+			if (!currentMatch) throw new Error(`Match with id "${matchId}" not found`);
+			const candidateMatch = mergeMatchData(currentMatch, {
 				isFinished: true,
 				status: "completed",
 				players: [{ score: score1 }, { score: score2 }]
 			});
-			const matchState = getMatchState(updatedMatch);
+			const matchState = getMatchState(candidateMatch);
 			if (matchState.status !== "completed") throw new Error(`Match "${matchId}" cannot be finished because its state is "${matchState.status}".`);
+			const updatedMatch = updateMatch(matchId, candidateMatch);
 			if (typeof config.onMatchFinish === "function") config.onMatchFinish(updatedMatch);
 			return updatedMatch;
 		}
@@ -444,6 +448,9 @@
 			}
 		};
 	}
+	//#endregion
+	//#region src/entry-browser.js
+	if (typeof window !== "undefined") window.tournamentBracket = tournamentBracket;
 	//#endregion
 	return tournamentBracket;
 });
