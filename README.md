@@ -810,7 +810,7 @@ Check these structure rules:
 
 ## Links
 
-- [Live Demo](https://YOUR_USERNAME.github.io/tournament-bracket/demo/)
+- [Live Demo](https://amirhossein-shk.github.io/tournament-bracket/demo/)
 - [GitHub Repository](https://github.com/amirhossein-shk/tournament-bracket)
 - [NPM Package](https://www.npmjs.com/package/@amirhossein-shk/tournament-bracket-js)
 
